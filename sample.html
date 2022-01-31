@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PHP File</title>
+</head>
+<body>
+<h1>Welcome to PHP Flix!</h1>
+<?php
+            $firstName = 'Daniel';
+            echo $firstName;
+            $firstName = 123;
+            echo $firstName;
+            //echo $firstName;
+            echo "<p>My name is $firstName</p>"; //double quotes notices variable
+echo '<p>My name is $firstName</p>'; // single quotes doesn't notice without concatenation
+echo '<p class ="bodyContent">My name is ' . $firstName . '</p>'; // This concatenates the two / Will use this more often because we'll need double quotes for html attributes
+echo '<p class ="bodyContent">My name is ' . $firstName . '</p>';
+
+?>
+</body>
+</html>
+//doesn't work because it's not a .php file
