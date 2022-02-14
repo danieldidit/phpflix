@@ -26,8 +26,8 @@
             $movieId = $_GET['movieId'];
 
             // connect to the db using db.php file
-            require 'db.php';
-            //$db = new PDO('mysql:host=172.31.22.43;dbname=Daniel200352106', 'Daniel200352106', 'sEmIhvPPaS');
+            //require 'db.php'; -- NOT WORKING
+            $db = new PDO('mysql:host=172.31.22.43;dbname=Daniel200352106', 'Daniel200352106', 'sEmIhvPPaS');
 
             // Set up the SQL DELETE command
             $sql = "DELETE FROM movies WHERE movieId = :movieId";
@@ -44,11 +44,11 @@
             echo '<h1>Movie Deleted</h1>
                 <a href="movies.php" class="alert alert-info">Back To Movie List</a>';
 
-        }
-        else { // We have a movieId but it's not a number
-            echo "Invalid Movie";
             }
-        }
+            else { // We have a movieId but it's not a number
+                echo "Invalid Movie";
+                }
+            }
         else { // movieId is missing
             echo "Invalid Movie";
         }

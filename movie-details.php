@@ -25,6 +25,28 @@
     $releaseYear = null;
     $genreId = null;
 
+    if (isset($_GET['movieId'])) {
+        if (is_numeric($_GET['movieId'])) {
+            // if we have a number in url, store in a variable
+            $movieId = $_GET['movieId'];
+
+            //require 'db2.php'; -- NOT WORKING
+            $db = new PDO('mysql:host=172.31.22.43;dbname=Daniel200352106', 'Daniel200352106', 'sEmIhvPPaS');
+            $sql = "SELECT * FROM movies WHERE movieId = :movieId";
+            $cmd = $db->prepare($sql);
+            $cmd->bindParam(':movieId', $movieId, PDO::PARAM_INT);
+            $cmd->execute();
+
+            // Use the PDO fetch command instead of fetchAll as we are only getting 1 row not many
+            $movie = $cmd->fetch();
+            $title = $movie['title'];
+            $rating = $movie['rating'];
+            $releaseYear = $movie['releaseYear'];
+            $genreId = $movie['genreId'];
+
+            $db = null;
+        }
+    }
     ?>
     <body>
     <main class="container">
@@ -33,20 +55,22 @@
         <form method="post" action="save-movie.php">
             <fieldset class="m-1">
                 <label for="title" class="col-1">Title:</label>
-                <input name="title" id="title" required maxlength="100"/>
+                <input name="title" id="title" required maxlength="100" value ="<?php echo $title; ?>"/>
             </fieldset>
             <fieldset class="m-1">
                 <label for="rating" class="col-1">Rating:</label>
-                <input name="rating" id="rating" required maxlength="10"/>
+                <input name="rating" id="rating" required maxlength="10" value ="<?php echo $rating; ?>"/>
             </fieldset>
             <fieldset class="m-1">
                 <label for="releaseYear" class="col-1">Release Year:</label>
-                <input name="releaseYear" id="releaseYear" type="number" min ="1900" max="3000" required/>
+                <input name="releaseYear" id="releaseYear" type="number" min ="1900" max="3000" required
+                    value ="<?php echo $releaseYear; ?>"/>
             </fieldset>
             <fieldset class="m-1">
                 <label for="genreId" class="col-1">Genre:</label>
                 <select name="genreId" id="genreId">
                     <?php
+                    // require 'db.php'; -- NOT WORKING
                     $db = new PDO('mysql:host=172.31.22.43;dbname=Daniel200352106', 'Daniel200352106', 'sEmIhvPPaS');
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -56,7 +80,14 @@
                     $genres = $cmd->fetchAll();
 
                     foreach ($genres as $genre) {
-                        echo '<option value="' . $genre['genreId'] . '">' . $genre['name'] . '</option>';
+                        if ($genre['genreId'] == $genreId) {
+                            // If current genre matches the genre of the movie we are editing, select this option
+                            echo '<option selected value="' . $genre['genreId'] . '">' . $genre['name'] . '</option>';
+
+                        }
+                        else {
+                            echo '<option value="' . $genre['genreId'] . '">' . $genre['name'] . '</option>';
+                        }
                     }
 
                     $db = null;
@@ -64,6 +95,7 @@
                     ?>
                 </select>
             </fieldset>
+            <input name="movieId" id="movieId" value="<?php echo $movieId; ?>" type="hidden"/>
             <button class="offset-1 btn-secondary">Save</button>
         </form>
     </main>

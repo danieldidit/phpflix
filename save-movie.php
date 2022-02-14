@@ -11,6 +11,7 @@
         $rating = $_POST['rating'];
         $releaseYear = $_POST['releaseYear'];
         $genreId = $_POST['genreId'];
+        $movieId = $_POST['movieId']; // null when inserting, numeric when updating
         $ok = true;
 
         // Input validation checking - must have no errors before saving - validate each field individually
@@ -54,8 +55,17 @@
             //5 values required: dbtype / server address / db name / username / password
             $db = new PDO('mysql:host=172.31.22.43;dbname=Daniel200352106', 'Daniel200352106', 'sEmIhvPPaS');
 
-            // set up an SQL INSERT command with placeholders for our three values ( : <-- represents parameters)
-            $sql = "INSERT INTO movies (title, rating, releaseYear, genreId) VALUES (:title, :rating, :releaseYear, :genreId)";
+            // if we have no movieId, insert. if we already have a movieId, update instead
+            if (empty($movieId)) {
+                // set up an SQL INSERT command with placeholders for our three values ( : <-- represents parameters)
+            $sql = "INSERT INTO movies (title, rating, releaseYear, genreId) VALUES (:title, :rating, 
+                                                                 :releaseYear, :genreId)";
+            }
+            else {
+                $sql = "UPDATE movies SET title = :title, rating = :rating, releaseYear = :releaseYear,
+                    genreId = :genreId WHERE movieId = :movieId";
+            }
+
 
             // create a command object using our db connection & SQL command from above
             // in java syntax is $db.prepare($sql); -> is same as .
@@ -67,6 +77,10 @@
             $cmd->bindParam(':releaseYear', $releaseYear, PDO::PARAM_INT); /* PARAM_INT max length is
             predefined*/
             $cmd->bindParam(':genreId', $genreId, PDO::PARAM_INT);
+            // If we have a movieId, we need to bind it as a 5th parameter
+            if(isset($movieId)) {
+                $cmd->bindParam(':movieId', $movieId, PDO::PARAM_INT);
+            }
 
             // execute the command to save the movie permanently to our db table
             $cmd->execute();

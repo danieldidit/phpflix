@@ -32,6 +32,7 @@
             </thead>
             <tbody>
                 <?php
+                // require 'db.php'; -- NOT WORKING
                 $db = new PDO('mysql:host=172.31.22.43;dbname=Daniel200352106', 'Daniel200352106', 'sEmIhvPPaS');
                 $sql ="SELECT * FROM movies INNER JOIN genres ON movies.genreId = genres.genreId";
 
