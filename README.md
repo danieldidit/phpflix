@@ -1,5 +1,5 @@
-# phpflix
-phpflix with Rich Freeman
+phpflix
 
+Learning PHP by creating a movie database website
 
-Version -- Lesson 4
+Version -- 1
